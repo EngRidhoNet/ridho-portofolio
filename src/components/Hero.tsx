@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { Github, Linkedin, Mail, MapPin, Download, ChevronDown, Sparkles, Code2, Cpu } from 'lucide-react';
+import { Github, Linkedin, Mail, MapPin, Download,  Sparkles, Code2, Cpu } from 'lucide-react';
 
 const Hero: React.FC = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
