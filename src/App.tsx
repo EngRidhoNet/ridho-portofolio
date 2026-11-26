@@ -1,95 +1,120 @@
-import React from 'react';
-import Dock from './components/desktop/Dock';
-import ProfileCard from './components/desktop/ProfileCard';
-import ManifestoCard from './components/desktop/ManifestoCard';
-import ProjectsListCard from './components/desktop/ProjectsListCard';
-import FeaturedProjectCard from './components/desktop/FeaturedProjectCard';
-import ToolsCard from './components/desktop/ToolsCard';
-import ExperienceCard from './components/desktop/ExperienceCard';
-import EducationCard from './components/desktop/EducationCard';
-import TerminalCard from './components/desktop/TerminalCard';
-import StackMarquee from './components/desktop/StackMarquee';
-import SocialCard from './components/desktop/SocialCard';
-import NowPlayingCard from './components/desktop/NowPlayingCard';
-import ThemeToggle from './components/desktop/ThemeToggle';
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { TopNavBar, type RouteView } from './components/bento/PageNav';
+import { HomeBentoPage } from './components/bento/HomeBentoPage';
+import { WorkProjectsPage } from './components/bento/WorkProjectsPage';
+import { ProjectDetailPage } from './components/bento/ProjectDetailPage';
+import { AwardsWinsPage } from './components/bento/AwardsWinsPage';
+import { WritingNotesPage } from './components/bento/WritingNotesPage';
+import { AboutBentoPage } from './components/bento/AboutBentoPage';
+import { CommandTerminalModal } from './components/bento/CommandTerminalModal';
+
+function parseHashToRoute(hash: string): RouteView {
+  const cleaned = hash.replace(/^#\/?/, '').trim();
+  if (!cleaned || cleaned === 'home') return { page: 'home' };
+  if (cleaned === 'work' || cleaned === 'projects') return { page: 'work' };
+  if (cleaned.startsWith('project/')) {
+    const slug = cleaned.replace('project/', '').trim();
+    return { page: 'project-detail', slug: slug || 'angkutkita' };
+  }
+  if (cleaned === 'awards' || cleaned === 'wins') return { page: 'awards' };
+  if (cleaned === 'writing' || cleaned === 'blog' || cleaned === 'notes') {
+    return { page: 'writing' };
+  }
+  if (cleaned === 'about') return { page: 'about' };
+  return { page: 'home' };
+}
+
+function routeToHash(route: RouteView): string {
+  switch (route.page) {
+    case 'home':
+      return '#home';
+    case 'work':
+      return '#work';
+    case 'project-detail':
+      return `#project/${route.slug}`;
+    case 'awards':
+      return '#awards';
+    case 'writing':
+      return '#writing';
+    case 'about':
+      return '#about';
+  }
+}
 
 const App: React.FC = () => {
+  const [route, setRoute] = useState<RouteView>(() =>
+    typeof window !== 'undefined' ? parseHashToRoute(window.location.hash) : { page: 'home' }
+  );
+  const [terminalOpen, setTerminalOpen] = useState(false);
+
+  useEffect(() => {
+    const onHashChange = () => {
+      setRoute(parseHashToRoute(window.location.hash));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setTerminalOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
+  const handleNavigate = (nextRoute: RouteView) => {
+    const targetHash = routeToHash(nextRoute);
+    if (window.location.hash !== targetHash) {
+      window.location.hash = targetHash;
+    } else {
+      setRoute(nextRoute);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const routeKey =
+    route.page === 'project-detail' ? `project-${route.slug}` : route.page;
+
   return (
-    <div className="relative min-h-screen bg-bg text-body desktop-bg noise">
-      {/* Menubar */}
-      <div className="relative z-20 px-4 md:px-6 h-10 flex items-center justify-between text-[11.5px] text-muted font-medium">
-        <div className="flex items-center gap-3">
-          <span className="text-body/90"></span>
-          <span className="hidden sm:inline">ridho.fyi</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="hidden sm:inline">Malang, ID</span>
-          <span className="font-mono hidden sm:inline">v2026.04</span>
-          <ThemeToggle />
-        </div>
-      </div>
+    <div className="bento-grid-bg min-h-[100dvh] px-3 pt-5 pb-8 text-ink sm:px-5 sm:pt-8 sm:pb-10 xl:px-8 xl:pt-10 xl:pb-12">
+      <TopNavBar
+        currentRoute={route}
+        onNavigate={handleNavigate}
+        onOpenCommandPalette={() => setTerminalOpen(true)}
+      />
 
-      {/* Bento grid */}
-      <main className="relative z-10 px-4 md:px-6 pb-32 pt-2 max-w-[1280px] mx-auto">
-        <div className="grid grid-cols-12 auto-rows-[minmax(90px,auto)] gap-3 md:gap-4">
-          {/* Row 1 — Profile + Manifesto */}
-          <div className="col-span-12 md:col-span-5 row-span-4">
-            <ProfileCard />
-          </div>
-          <div className="col-span-12 md:col-span-7 row-span-4">
-            <ManifestoCard />
-          </div>
-
-          {/* Row 2 — Featured project + Projects list */}
-          <div id="projects-top" className="col-span-12 md:col-span-7 row-span-6">
-            <FeaturedProjectCard />
-          </div>
-          <div className="col-span-12 md:col-span-5 row-span-6">
-            <ProjectsListCard />
-          </div>
-
-          {/* Row 3 — Tools + Terminal + Now */}
-          <div className="col-span-12 md:col-span-5 row-span-5">
-            <ToolsCard />
-          </div>
-          <div className="col-span-12 md:col-span-4 row-span-5">
-            <TerminalCard />
-          </div>
-          <div className="col-span-12 md:col-span-3 row-span-5">
-            <NowPlayingCard />
-          </div>
-
-          {/* Row 4 — Stack marquee full-width */}
-          <div className="col-span-12 row-span-2">
-            <StackMarquee />
-          </div>
-
-          {/* Row 5 — Experience + Education */}
-          <div className="col-span-12 md:col-span-7 row-span-6">
-            <ExperienceCard />
-          </div>
-          <div className="col-span-12 md:col-span-5 row-span-6">
-            <EducationCard />
-          </div>
-
-          {/* Row 6 — Social */}
-          <div className="col-span-12 row-span-3">
-            <SocialCard />
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11.5px] text-muted-2">
-          <span className="wave-divider">~ ~ ~ ~ ~</span>
-          <span>
-            Designed & built by Ridho · © {new Date().getFullYear()} ·
-            made in Malang
-          </span>
-          <span className="wave-divider">~ ~ ~ ~ ~</span>
-        </div>
+      <main id="main">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={routeKey}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {route.page === 'home' && <HomeBentoPage onNavigate={handleNavigate} />}
+            {route.page === 'work' && <WorkProjectsPage onNavigate={handleNavigate} />}
+            {route.page === 'project-detail' && (
+              <ProjectDetailPage slug={route.slug} onNavigate={handleNavigate} />
+            )}
+            {route.page === 'awards' && <AwardsWinsPage onNavigate={handleNavigate} />}
+            {route.page === 'writing' && <WritingNotesPage onNavigate={handleNavigate} />}
+            {route.page === 'about' && <AboutBentoPage onNavigate={handleNavigate} />}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
-      <Dock />
+      <CommandTerminalModal
+        isOpen={terminalOpen}
+        onClose={() => setTerminalOpen(false)}
+        onNavigate={handleNavigate}
+      />
     </div>
   );
 };
