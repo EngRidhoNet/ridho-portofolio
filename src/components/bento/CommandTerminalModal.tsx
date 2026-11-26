@@ -20,15 +20,20 @@ const INITIAL_LINES: TermLine[] = [
     type: 'out',
     text: 'Ridho Aulia Rahman (@EngRidhoNet) — Full Stack Developer & AI Engineer based in Malang, ID.',
   },
-  { type: 'cmd', text: 'cat stack.txt' },
+  { type: 'cmd', text: 'ls live-products/' },
   {
     type: 'out',
-    text: 'React · TypeScript · Laravel · Golang · Flutter · Python · TensorFlow · PostgreSQL · Docker',
+    text: 'flooty.id (5.0★ App Store) · macbridge.my.id (macOS/iPadOS) · clova.my.id (AI Stylist) · winsta.net (AI Trends)',
+  },
+  { type: 'cmd', text: 'ls open-source/' },
+  {
+    type: 'out',
+    text: 'guardbench (AI Guardrail Evals) · cosmos-motion (3D Documentary Engine) · f1-race-intelligence · Hybrid-Densenet-Pneumonia',
   },
   { type: 'cmd', text: 'help' },
   {
     type: 'out',
-    text: 'Commands: work | awards | writing | about | home | cv | contact | clear',
+    text: 'Commands: work | flooty | macbridge | clova | winsta | guardbench | cosmos | awards | writing | about | cv | clear',
   },
 ];
 
@@ -69,6 +74,30 @@ export const CommandTerminalModal: React.FC<CommandTerminalModalProps> = ({
       nextLines.push({ type: 'out', text: 'Navigating to Work & Projects...' });
       onNavigate({ page: 'work' });
       onClose();
+    } else if (cmd === 'flooty') {
+      nextLines.push({ type: 'out', text: 'Opening Flooty case study...' });
+      onNavigate({ page: 'project-detail', slug: 'flooty' });
+      onClose();
+    } else if (cmd === 'macbridge') {
+      nextLines.push({ type: 'out', text: 'Opening MacBridge case study...' });
+      onNavigate({ page: 'project-detail', slug: 'macbridge' });
+      onClose();
+    } else if (cmd === 'clova') {
+      nextLines.push({ type: 'out', text: 'Opening Clova case study...' });
+      onNavigate({ page: 'project-detail', slug: 'clova' });
+      onClose();
+    } else if (cmd === 'winsta') {
+      nextLines.push({ type: 'out', text: 'Opening Winsta case study...' });
+      onNavigate({ page: 'project-detail', slug: 'winsta' });
+      onClose();
+    } else if (cmd === 'guardbench') {
+      nextLines.push({ type: 'out', text: 'Opening GuardBench case study...' });
+      onNavigate({ page: 'project-detail', slug: 'guardbench' });
+      onClose();
+    } else if (cmd === 'cosmos' || cmd === 'cosmos-motion') {
+      nextLines.push({ type: 'out', text: 'Opening CosmosMotion case study...' });
+      onNavigate({ page: 'project-detail', slug: 'cosmos-motion' });
+      onClose();
     } else if (cmd === 'awards' || cmd === 'wins') {
       nextLines.push({ type: 'out', text: 'Opening Small Wins & Achievements...' });
       onNavigate({ page: 'awards' });
@@ -96,12 +125,12 @@ export const CommandTerminalModal: React.FC<CommandTerminalModalProps> = ({
     } else if (cmd === 'whoami') {
       nextLines.push({
         type: 'out',
-        text: 'Ridho Aulia Rahman — Founder @ Future AI Indonesia, Web Dev @ Hospital Penawar, Fullstack @ PT Noxio, Coding Educator @ Ruangguru.',
+        text: 'Ridho Aulia Rahman — Creator of Flooty, MacBridge, Clova, Winsta, GuardBench & CosmosMotion.',
       });
     } else {
       nextLines.push({
         type: 'out',
-        text: `Command not found: "${cmd}". Try: work, awards, writing, about, cv, contact, clear`,
+        text: `Command not found: "${cmd}". Try: flooty, macbridge, clova, winsta, guardbench, cosmos, work, awards, writing, about`,
       });
     }
 
@@ -111,34 +140,34 @@ export const CommandTerminalModal: React.FC<CommandTerminalModalProps> = ({
 
   const quickActions: { label: string; hint: string; action: () => void }[] = [
     {
-      label: 'Go to Work & Projects',
-      hint: '6 case studies + career timeline',
+      label: 'Flooty & MacBridge Case Studies',
+      hint: 'flooty.id (5.0★ App Store) & macbridge.my.id',
+      action: () => {
+        onNavigate({ page: 'project-detail', slug: 'flooty' });
+        onClose();
+      },
+    },
+    {
+      label: 'GuardBench & CosmosMotion',
+      hint: 'Open-Source AI Guardrail Evals & 3D Video Engine',
+      action: () => {
+        onNavigate({ page: 'project-detail', slug: 'guardbench' });
+        onClose();
+      },
+    },
+    {
+      label: 'All 12 Projects & 90+ GitHub Repos',
+      hint: 'Clova, Winsta, F1 Intelligence, DenseNet, AURA+',
       action: () => {
         onNavigate({ page: 'work' });
         onClose();
       },
     },
     {
-      label: 'Go to Small Wins (Awards)',
-      hint: 'HackFest Top 10, Intl Paper 1st Runner Up, SISFO',
-      action: () => {
-        onNavigate({ page: 'awards' });
-        onClose();
-      },
-    },
-    {
-      label: 'Go to Writing & Notes',
-      hint: 'Engineering & AI research essays',
+      label: 'Writing & Technical Notes',
+      hint: 'Why I built GuardBench, CosmosMotion, Flooty...',
       action: () => {
         onNavigate({ page: 'writing' });
-        onClose();
-      },
-    },
-    {
-      label: 'Go to About & Philosophy',
-      hint: 'Story, education, and principles',
-      action: () => {
-        onNavigate({ page: 'about' });
         onClose();
       },
     },
@@ -229,7 +258,7 @@ export const CommandTerminalModal: React.FC<CommandTerminalModalProps> = ({
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type a command (e.g. work, awards, writing, about, cv)..."
+            placeholder="Type a command (e.g. flooty, macbridge, clova, winsta, guardbench, cosmos)..."
             className="w-full bg-transparent text-white placeholder-white/35 focus:outline-none"
           />
           <button

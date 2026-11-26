@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import type { RouteView } from './PageNav';
 import { galleryHighlights } from '../../data/portfolioData';
 import { playPianoNote, playSoftClick } from '../../utils/sound';
-import { Github, Linkedin, Mail, FileText, ArrowUpRight, Sparkles } from 'lucide-react';
+import { Github, Linkedin, Mail, FileText, ArrowUpRight, Sparkles, Globe, Code2 } from 'lucide-react';
 
 interface HomeBentoPageProps {
   onNavigate: (route: RouteView) => void;
@@ -192,15 +192,18 @@ export const HomeBentoPage: React.FC<HomeBentoPageProps> = ({ onNavigate }) => {
           <div className="relative z-10 flex h-full flex-col justify-between">
             <div>
               <span className="font-mono text-[10.5px] font-medium uppercase tracking-wider opacity-70">
-                01 / Shipped systems
+                01 / 12 Case Studies &amp; 90+ Repos
               </span>
               <h2 className="mt-1.5 max-w-[8ch] text-[clamp(1.6rem,2.5vw,2.35rem)] font-medium leading-[1.02]">
                 Work &amp;
                 <br />
                 projects.
               </h2>
+              <p className="mt-1.5 text-xs font-medium opacity-75">
+                Flooty · MacBridge · Clova · Winsta · GuardBench
+              </p>
             </div>
-            <span className="mt-6 inline-flex items-center gap-2 text-[0.76rem] font-semibold">
+            <span className="mt-4 inline-flex items-center gap-2 text-[0.76rem] font-semibold">
               See selected work{' '}
               <b className="grid size-7 place-items-center rounded-full bg-white text-base text-brand transition duration-500 ease-out group-hover:translate-x-1 group-hover:bg-brand group-hover:text-white">
                 →
@@ -237,7 +240,7 @@ export const HomeBentoPage: React.FC<HomeBentoPageProps> = ({ onNavigate }) => {
                 Small wins.
               </h2>
               <p className="mt-1.5 text-xs font-medium opacity-75">
-                HackFest Top 10 · Intl. Paper 1st Runner Up
+                HackFest Top 10 · Intl. Paper 1st Runner Up · 5.0★ App Store
               </p>
             </div>
             <span className="inline-flex items-center gap-2 text-[0.76rem] font-semibold">
@@ -414,8 +417,114 @@ export const HomeBentoPage: React.FC<HomeBentoPageProps> = ({ onNavigate }) => {
         </article>
       </div>
 
+      {/* Live Products & Open Source Dock Strip */}
+      <section
+        aria-label="Shipped live products and open source packages"
+        className="bento-card mt-4 p-4 sm:p-5 md:mt-5"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <span className="inline-flex items-center gap-2 font-mono text-[10.5px] font-semibold uppercase tracking-wider text-ink-soft">
+            <span className="size-2 rounded-full bg-emerald-500" />
+            Live Shipped Products &amp; Open-Source Packages
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              playSoftClick();
+              onNavigate({ page: 'work' });
+            }}
+            className="font-mono text-[11px] font-semibold text-brand hover:underline"
+          >
+            View all 12 case studies &amp; 90+ repos &rarr;
+          </button>
+        </div>
+
+        <div className="mt-3 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-6">
+          {[
+            {
+              title: 'Flooty',
+              sub: 'flooty.id · 5.0★ App Store',
+              slug: 'flooty',
+              url: 'https://flooty.id/',
+              bg: '#bfe8db',
+              isLive: true,
+            },
+            {
+              title: 'MacBridge',
+              sub: 'macbridge.my.id · macOS/iPad',
+              slug: 'macbridge',
+              url: 'https://macbridge.my.id/',
+              bg: '#dbe8f5',
+              isLive: true,
+            },
+            {
+              title: 'Clova AI',
+              sub: 'clova.my.id · Wardrobe AI',
+              slug: 'clova',
+              url: 'https://clova.my.id/',
+              bg: '#ffb743',
+              isLive: true,
+            },
+            {
+              title: 'Winsta',
+              sub: 'winsta.net · AI Trends',
+              slug: 'winsta',
+              url: 'https://www.winsta.net/',
+              bg: '#f4cbca',
+              isLive: true,
+            },
+            {
+              title: 'GuardBench',
+              sub: 'AI Guardrail Eval Toolkit',
+              slug: 'guardbench',
+              url: 'https://github.com/EngRidhoNet/guardbench',
+              bg: '#e8dff2',
+              isLive: false,
+            },
+            {
+              title: 'CosmosMotion',
+              sub: '3D Documentary Engine (npm)',
+              slug: 'cosmos-motion',
+              url: 'https://github.com/EngRidhoNet/cosmos-motion',
+              bg: '#cfe2d0',
+              isLive: false,
+            },
+          ].map((item) => (
+            <div
+              key={item.slug}
+              onClick={() => {
+                playSoftClick();
+                onNavigate({ page: 'project-detail', slug: item.slug });
+              }}
+              style={{ backgroundColor: item.bg }}
+              className="group flex cursor-pointer flex-col justify-between rounded-xl border border-black/10 p-3 text-[#1d2330] transition hover:-translate-y-0.5 hover:shadow-sm"
+            >
+              <div className="flex items-center justify-between gap-1">
+                <strong className="text-xs font-bold">{item.title}</strong>
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  title={`Open ${item.url}`}
+                  className="grid size-5 place-items-center rounded-full bg-white/80 text-[#1768e5] transition hover:bg-[#1768e5] hover:text-white"
+                >
+                  {item.isLive ? <Globe className="size-3" /> : <Code2 className="size-3" />}
+                </a>
+              </div>
+              <span className="mt-1 truncate font-mono text-[9.5px] font-medium opacity-80">
+                {item.sub}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Bottom Row: GitHub Streak Card + Direct Contact Bento Card */}
-      <section className="mt-4 grid grid-cols-1 gap-3.5 md:mt-5 md:grid-cols-12 md:gap-4" aria-label="GitHub and Contact">
+      <section
+        className="mt-4 grid grid-cols-1 gap-3.5 md:mt-5 md:grid-cols-12 md:gap-4"
+        aria-label="GitHub and Contact"
+      >
         {/* GitHub Streak Card */}
         <div className="bento-card surface-ink group col-span-1 p-5 text-white sm:p-7 md:col-span-6">
           <div className="relative z-10 flex items-start justify-between gap-4">
@@ -431,7 +540,7 @@ export const HomeBentoPage: React.FC<HomeBentoPageProps> = ({ onNavigate }) => {
               <div>
                 <span className="block text-sm font-semibold">@EngRidhoNet</span>
                 <span className="block font-mono text-[10.5px] text-white/60">
-                  Full Stack · AI/ML · Microservices
+                  GuardBench · CosmosMotion · F1 Intelligence
                 </span>
               </div>
             </a>
@@ -466,7 +575,7 @@ export const HomeBentoPage: React.FC<HomeBentoPageProps> = ({ onNavigate }) => {
             <h2 className="text-[clamp(1.35rem,2.1vw,1.9rem)] font-medium leading-[1.04]">
               Code on streak.
             </h2>
-            <span className="font-mono text-[11px] text-sky-400">20+ shipped repos</span>
+            <span className="font-mono text-[11px] text-sky-400">90+ public repositories</span>
           </div>
         </div>
 
@@ -486,12 +595,12 @@ export const HomeBentoPage: React.FC<HomeBentoPageProps> = ({ onNavigate }) => {
 
           <div className="my-4 grid grid-cols-3 gap-2.5">
             <div className="rounded-xl border border-line-bento bg-page p-3">
-              <div className="text-lg font-bold text-ink">3+ yrs</div>
-              <div className="font-mono text-[10px] uppercase text-ink-soft">Experience</div>
+              <div className="text-lg font-bold text-ink">4+ Live</div>
+              <div className="font-mono text-[10px] uppercase text-ink-soft">SaaS &amp; Apps</div>
             </div>
             <div className="rounded-xl border border-line-bento bg-page p-3">
-              <div className="text-lg font-bold text-ink">3.87</div>
-              <div className="font-mono text-[10px] uppercase text-ink-soft">GPA · Scholar</div>
+              <div className="text-lg font-bold text-ink">90+</div>
+              <div className="font-mono text-[10px] uppercase text-ink-soft">GitHub Repos</div>
             </div>
             <div className="rounded-xl border border-line-bento bg-page p-3">
               <div className="text-lg font-bold text-ink">500+</div>
